@@ -1,0 +1,80 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<title>弹弹弹弹2</title>
+		<style>
+			html,body{margin: 0;padding: 0;}
+			body{position: relative;height: 100%;}
+			.g_test{
+				font-size:15px;
+				color:#000;
+			}
+			.base_line{
+				position:absolute; top:0px; width:100%; height:50%; border-bottom:1px dashed red;
+			}
+			.dot{
+				display:block;
+				height:20px; width:20px; -webkit-border-radius:10px; background-color:#000;
+				position:absolute;
+				top:50%; left:50%; margin-left:-10px; margin-top:-10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="g_test" class="g_test">
+			<p id="wording"></p>
+			<p id="wording1"></p>
+			<p id="wording2"></p>
+			<div class="base_line" id="baseLine"></div>
+			<span id="dot" class="dot"></span>
+		</div>
+		<script>
+			var g_test = document.getElementById("g_test"),
+				wording = document.getElementById("wording"),
+				wording1 = document.getElementById("wording1"),
+				wording2 = document.getElementById("wording2"),
+				dot = document.getElementById("dot"),
+				windowW = window.innerWidth,
+				windowH = window.innerHeight,
+				test = windowH/2 * windowH/2 - windowW/2 * windowW/2,
+				test1 = windowW/2,
+				test2 = windowH/2;
+					
+			var	baseLine = document.getElementById("baseLine"),
+				baseLineHSqr = Math.abs(windowH/2 * windowH/2 - windowW/2 * windowW/2);
+				baseLineH = Math.sqrt(baseLineHSqr);
+			baseLine.style.height = baseLineH + "px";//base line显示
+			init();
+			function init(){
+				if(window.DeviceOrientationEvent){
+					window.addEventListener('deviceorientation',  function(e) {
+						var angle = parseInt(e.alpha),
+							radius = e.alpha * (Math.PI / 180);
+						
+						wording.innerHTML = 'gamma is ' + e.gamma + '; beta is ' + e.beta + '; alpha is ' + e.alpha +'; width is ' + windowW + "; height is " + windowH + "; move to x " + X(radius) + "; move to y " + Y(radius);
+						wording1.innerHTML = 'tanY is11 ' + Math.tan(radius) + "<br />sinY is " + Math.sin(radius) + "<br />cosY is " + Math.cos(radius) + "<br/><br/> move to x " + X(radius) + "<br/>move to y " + Y(radius);
+						wording2.innerHTML = 'webkitTransform:translate(' + X(radius) + 'px, ' + Y(radius) + 'px)';
+						dot.style.webkitTransform = 'translate(' + X(radius) + 'px, ' + Y(radius) + 'px)';
+						
+					});
+				}
+			}
+			
+			function X(alpha){//x轴上的位移
+				var x = windowH/2 * Math.sin(alpha);//xy[0]为x值，xy[1]为y值
+				if(x>windowH/2){
+					return windowH/2
+				}else if(x<-windowH/2){
+					return -windowH/2
+				}else{
+					return x;
+				}
+			}
+			function Y(alpha){//y轴上的位移
+				var y = (windowW / 2) - (windowW / 2) * Math.cos(alpha);
+				return -y;
+			}
+		</script>
+	</body>
+</html>
